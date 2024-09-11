@@ -4,18 +4,19 @@ import App from "./App.jsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ListaInciden } from "./contexts/IncidenciasContext.jsx";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
+// import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { LoginProvider } from "./contexts/LoginContext.jsx";
 
 const queryclient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <QueryClientProvider client={queryclient}>
-    <AuthProvider>
-      <ListaInciden>
-        <App />
-      </ListaInciden>
-    </AuthProvider>
+    <LoginProvider>
+        <ListaInciden>
+          <App />
+        </ListaInciden>
+    </LoginProvider>
   </QueryClientProvider>
 
   // </StrictMode>,

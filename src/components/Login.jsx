@@ -1,29 +1,20 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useLogin } from '../contexts/LoginContext';
 import gray from '/gray.jpeg';
 
 export const Login = () => {
-  const { login } = useAuth();
+  const { login, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleLogin = () => {
-    
-    const validEmail = 'mauro@example.com';
-    const validPassword = 'mauro123';
-
-    if (email === validEmail && password === validPassword) {
-      login();
-    } else {
-      setError('Credenciales incorrectas. Por favor, intente de nuevo.');
-    }
+    login({ email, contraseña: password }); 
   };
 
   return (
     <div
-      className="bg-cover bg-center h-[100vh] flex justify-center items-center"
-      style={{ backgroundImage: `url(${gray})` }}
+      className="bg-repeat-y bg-center min-h-screen flex justify-center items-center bg-black"
+      style={{ backgroundImage: `url(${gray})`, backgroundSize: 'cover' }}
     >
       <div className="border-[2px] border-green-600 w-[40vw] h-[80vh] rounded-2xl flex flex-col gap-5 bg-black bg-opacity-50">
         <h1 className="text-center text-[50px] text-white mt-[40px]">Login</h1>
@@ -36,7 +27,7 @@ export const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            type="text"
+            type="password"
             placeholder="password"
             className="h-[8vh] w-[30vw] px-4 rounded-xl"
             value={password}

@@ -24,10 +24,10 @@ export const obtenerIncidenciaPorId = async (id) => {
 
 export const crearIncidencia = async (incidencia) => {
   try {
-    const response = await axios.post(API_URL, incidencia); // Envía los datos en la solicitud
+    const response = await axios.post(API_URL, incidencia);
     return response.data;
   } catch (error) {
-    console.error("Error al crear la incidencia:", error); // Corrige el manejo de errores
+    console.error("Error al crear la incidencia:", error);
     throw error;
   }
 };

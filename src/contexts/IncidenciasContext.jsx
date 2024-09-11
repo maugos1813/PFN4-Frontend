@@ -10,8 +10,6 @@ export const ListaInciden = ({ children }) => {
         queryFn: obtenerIncidencias
     })
 
-    console.log("Data", data);
-
     return (
         <ListaIncidenciasContext.Provider value={{data}}>
             {children}

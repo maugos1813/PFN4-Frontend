@@ -1,25 +1,29 @@
 import React from 'react';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Route, Switch, Redirect } from 'wouter';
+import { useLogin } from './contexts/LoginContext';
 import { Login } from './components/Login';
 import { Nav } from './components/Nav';
-import { Route } from 'wouter';
-import { Home } from './components/Home';
-import { Crear } from './components/Crear';
-import { Incidencias } from './components/Incidencias';
-import { VerIncidencias } from './components/VerIncidencias';
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { user, loading } = useLogin();
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
-   <>
-      {!isAuthenticated ? (
-        <Login />
-      ) : (
-        <>
-          <Nav/>
-        </>
-      )}
+    <>
+      <Switch>
+        <Route path="/login" component={Login} />
+
+        {user ? (
+          <>
+            <Nav />
+          </>
+        ) : (
+          <Redirect to="/login" />
+        )}
+      </Switch>
     </>
   );
 }

@@ -1,7 +1,6 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { crearIncidencia } from "../services/incidenciasServices";
-import gray from '/gray.jpeg'
+import gray from '/gray.jpeg';
 
 export const Crear = () => {
   const [incidencia, setIncidencia] = useState({
@@ -10,6 +9,7 @@ export const Crear = () => {
     descripcion: "",
     ubicacion: "",
   });
+  const [imagen, setImagen] = useState(null); // Para manejar la imagen
 
   const handleChange = (e) => {
     setIncidencia({
@@ -18,10 +18,24 @@ export const Crear = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    setImagen(e.target.files[0]); // Guardar la imagen seleccionada
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('asunto', incidencia.asunto);
+    formData.append('tipo_incidencia', incidencia.tipo_incidencia);
+    formData.append('descripcion', incidencia.descripcion);
+    formData.append('ubicacion', incidencia.ubicacion);
+    if (imagen) {
+      formData.append('imagen', imagen); // Agregar imagen si está presente
+    }
+
     try {
-      await crearIncidencia(incidencia);
+      await crearIncidencia(formData);
       alert("Incidencia creada con éxito");
       setIncidencia({
         asunto: "",
@@ -29,6 +43,7 @@ export const Crear = () => {
         descripcion: "",
         ubicacion: "",
       });
+      setImagen(null); // Limpiar la imagen después del envío
     } catch (error) {
       console.error("Error al crear la incidencia", error);
       alert("Hubo un error al crear la incidencia");
@@ -37,7 +52,7 @@ export const Crear = () => {
 
   return (
     <div className="bg-gray-800 h-[90vh] bg-cover bg-center"
-    style={{backgroundImage: `url(${gray})`}}>
+      style={{ backgroundImage: `url(${gray})` }}>
       <h2 className="text-gray-200 font-bold text-[50px] text-center uppercase">Crear Incidencia</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center">
         <input
@@ -64,7 +79,7 @@ export const Crear = () => {
           value={incidencia.descripcion}
           onChange={handleChange}
           required
-          className="h-[25vh] w-[60vw] px-5 rounded-xl"
+          className="h-[15vh] w-[60vw] px-5 rounded-xl"
         />
         <input
           type="text"
@@ -74,6 +89,13 @@ export const Crear = () => {
           onChange={handleChange}
           required
           className="h-[10vh] w-[60vw] px-5 rounded-xl"
+        />
+        <input
+          type="file"
+          name="imagen"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="h-[4vh] w-[30vw] text-white border bg-black"
         />
         <button type="submit" className="bg-green-600 rounded-2xl text-gray-800 w-[300px] h-[10vh]">Crear Incidencia</button>
       </form>
