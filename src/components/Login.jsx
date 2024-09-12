@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import { useLogin } from '../contexts/LoginContext';
 import gray from '/gray.jpeg';
+import { useLocation } from 'wouter';
 
 export const Login = () => {
   const { login, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [, setLocation] = useLocation(); 
 
-  const handleLogin = () => {
-    login({ email, contraseña: password }); 
+  const handleLogin = async () => {
+    try {
+      await login({ email, contraseña: password });
+      
+      setTimeout(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          setLocation('/home'); 
+        }
+      }, 1000); 
+    } catch (err) {
+      console.error('Error durante el inicio de sesión:', err);
+    }
   };
 
   return (

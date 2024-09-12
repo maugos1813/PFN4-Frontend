@@ -34,7 +34,7 @@ export const crearIncidencia = async (incidencia) => {
 
 export const actualizarIncidencia = async (id, incidenciaActualizada) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, incidenciaActualizada);
+    const response = await axios.patch(`${API_URL}/${id}`, incidenciaActualizada);
     return response.data;
   } catch (error) {
     console.error(`Error al actualizar la incidencia con ID ${id}`, error);

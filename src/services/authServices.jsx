@@ -5,14 +5,15 @@ const API_URL = 'http://localhost:3000/api/auth';
 const login = async (email, contraseña) => {
   try {
     const response = await axios.post(`${API_URL}/login`, { email, contraseña });
-
+    
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
     }
-    return response.data
+    
+    return response.data;
   } catch (error) {
     console.error('Error en el inicio de sesión:', error.response?.data?.message || error.message);
-    throw error;
+    throw error; 
   }
 };
 
@@ -31,7 +32,7 @@ const getMe = async () => {
     return response.data;
   } catch (error) {
     console.error('Error al obtener los datos del usuario:', error.response?.data?.message || error.message);
-    throw error;
+    throw error; 
   }
 };
 

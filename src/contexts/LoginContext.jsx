@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
-
 import { login as loginService, getMe as getMeService } from '../services/authServices.jsx';
 
 const LoginContext = createContext();
@@ -9,23 +8,49 @@ const LoginContext = createContext();
 export const LoginProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [, setLocation] = useLocation();
 
-  const [, setLocation] = useLocation(); 
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      
+      getMeService()
+        .then(data => {
+          setUser(data);
+        })
+        .catch(() => {
+          
+          localStorage.removeItem('token');
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false);  
+        });
+    } else {
+      setLoading(false);  
+    }
+  }, []);
 
-  const mutation = useMutation({
+  const loginMutation = useMutation({
     mutationFn: ({ email, contraseña }) => loginService(email, contraseña),
     onSuccess: (data) => {
-      setUser(data);
-      localStorage.setItem('token', data.token);
-      setLocation('/home'); 
+      setUser(data.user);
+      setLocation('/home');
     },
     onError: (error) => {
-      setError(error.response?.data?.message || 'Error al iniciar sesión');
+      console.error('Error al iniciar sesión:', error.message);
     },
   });
 
-  const { isLoading, error: queryError } = useQuery({
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setLocation('/login');
+  };
+
+  
+  useQuery({
     queryKey: ['me'],
     queryFn: getMeService,
     enabled: !!localStorage.getItem('token'),
@@ -39,28 +64,13 @@ export const LoginProvider = ({ children }) => {
     },
   });
 
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (queryError) {
-      console.error('Error en la consulta de usuario:', queryError);
-    }
-  }, [queryError]);
-
   return (
     <LoginContext.Provider
       value={{
         user,
         loading,
-        error,
-        login: mutation.mutate,
-        logout: () => {
-          localStorage.removeItem('token');
-          setUser(null);
-          setLocation('/login');
-        },
+        login: loginMutation.mutate,
+        logout,
       }}
     >
       {children}
