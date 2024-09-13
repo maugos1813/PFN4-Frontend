@@ -1,7 +1,6 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { crearIncidencia } from "../services/incidenciasServices";
-import gray from '/gray.jpeg'
+import gray from '/gray.jpeg';
 
 export const Crear = () => {
   const [incidencia, setIncidencia] = useState({
@@ -15,6 +14,13 @@ export const Crear = () => {
     setIncidencia({
       ...incidencia,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSelectChange = (e) => {
+    setIncidencia({
+      ...incidencia,
+      tipo_incidencia: e.target.value,
     });
   };
 
@@ -37,7 +43,7 @@ export const Crear = () => {
 
   return (
     <div className="bg-gray-800 h-[90vh] bg-cover bg-center"
-    style={{backgroundImage: `url(${gray})`}}>
+      style={{ backgroundImage: `url(${gray})` }}>
       <h2 className="text-gray-200 font-bold text-[50px] text-center uppercase">Crear Incidencia</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 justify-center items-center">
         <input
@@ -49,15 +55,32 @@ export const Crear = () => {
           required
           className="h-[10vh] w-[60vw] px-5 rounded-xl"
         />
-        <input
-          type="text"
-          name="tipo_incidencia"
-          placeholder="Tipo de Incidencia, Ejemplo: Fontanería"
-          value={incidencia.tipo_incidencia}
-          onChange={handleChange}
-          required
-          className="h-[10vh] w-[60vw] px-5 rounded-xl"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            name="tipo_incidencia"
+            placeholder="Tipo de Incidencia, Ejemplo: Fontanería"
+            value={incidencia.tipo_incidencia}
+            onChange={handleChange}
+            required
+            className="h-[10vh] w-[40vw] px-5 rounded-xl"
+          />
+          <select
+            name="tipo_incidencia_select"
+            onChange={handleSelectChange}
+            className="h-[10vh] px-2 rounded-xl"
+          >
+            <option value="">Selecciona un tipo de incidencia</option>
+            <option value="Fontanería">Fontanería</option>
+            <option value="Electricidad">Electricidad</option>
+            <option value="Calefacción y Aire Acondicionado">Calefacción y Aire Acondicionado</option>
+            <option value="Seguridad">Seguridad</option>
+            <option value="Estructura y Construcción">Estructura y Construcción</option>
+            <option value="Plagas y Pestes">Plagas y Pestes</option>
+            <option value="Servicios Generales">Servicios Generales</option>
+            <option value="Mobiliario y Equipos">Mobiliario y Equipos</option>
+          </select>
+        </div>
         <textarea
           name="descripcion"
           placeholder="Escribe una descripción de lo sucedido"

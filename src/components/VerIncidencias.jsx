@@ -17,6 +17,7 @@ export const VerIncidencias = () => {
   const [selectedIncidencia, setSelectedIncidencia] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Filtra las incidencias por estado
   const filteredIncidencias = data
     .filter(
       (m) =>
@@ -29,6 +30,11 @@ export const VerIncidencias = () => {
         m.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.tipo_incidencia.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+  // Filtra las incidencias según el tipo de usuario
+  const incidenciasToShow = user?.tipoUsuario === "administrador"
+    ? filteredIncidencias
+    : filteredIncidencias.filter((m) => m.usuario_creador === user?.id);
 
   const handleCheckboxChange = (id) => {
     setSelectedIncidencias((prevSelected) =>
@@ -63,6 +69,8 @@ export const VerIncidencias = () => {
     setSelectedIncidencia(null);
   };
 
+  const isButtonDisabled = selectedIncidencias.length === 0;
+
   return (
     <div
       className="flex flex-col gap-4 bg-gray-700 h-[90vh] pl-[1%] pt-[1%] bg-cover bg-center"
@@ -80,14 +88,15 @@ export const VerIncidencias = () => {
           className="p-2 mb-4 rounded-md w-[30vw] mr-4"
         />
         {user?.tipoUsuario === "administrador" && (
-          <>
-            <button
-              onClick={handleGuardarClick}
-              className="bg-green-600 text-white p-2 mr-3 rounded-md h-[5vh]"
-            >
-              Enviar a Terminado
-            </button>
-          </>
+          <button
+            onClick={handleGuardarClick}
+            className={`p-2 mr-3 rounded-md h-[5vh] ${
+              isButtonDisabled ? "bg-gray-400" : "bg-green-600"
+            } text-white ${isButtonDisabled ? "cursor-not-allowed" : "hover:bg-green-500"}`}
+            disabled={isButtonDisabled}
+          >
+            Enviar a Terminado
+          </button>
         )}
         <button
           onClick={handleActualizarClick}
@@ -97,8 +106,8 @@ export const VerIncidencias = () => {
         </button>
       </div>
 
-      {filteredIncidencias.length > 0 ? (
-        filteredIncidencias.map((m) => (
+      {incidenciasToShow.length > 0 ? (
+        incidenciasToShow.map((m) => (
           <div
             key={m.idIncidencia}
             className="h-[10vh] w-[98vw] shadow-2xl2xl flex items-center rounded-3xl px-4 bg-white hover:bg-gray-300 gap-2 overflow-hidden"
@@ -155,7 +164,7 @@ export const VerIncidencias = () => {
             <div className="ml-auto">
               <button
                 onClick={() => handleIncidenciaClick(m)}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500"
+                className="bg-green-600 text-white px-4 py-2 h-[9vh] rounded-md hover:bg-green-500"
               >
                 Ver Detalles
               </button>

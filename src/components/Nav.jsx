@@ -7,17 +7,17 @@ import Home from "./Home";
 import { Crear } from "./Crear";
 import { VerIncidencias } from "./VerIncidencias";
 import Terminado from "./Terminado";
+import RegistroUsuario from './RegistroUsuario';
+import ListaUsuarios from './ListaUsuarios'; // Importa el componente ListaUsuarios
 
 export const Nav = () => {
   const { user, logout: logoutFunction } = useLogin();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    
     if (user) {
       setIsLoading(false);
     } else {
-     
       setIsLoading(false);
     }
   }, [user]);
@@ -46,7 +46,6 @@ export const Nav = () => {
             <Link href="/home" className="active:text-white">Home</Link>
           </li>
 
-         
           {user?.tipoUsuario === 'residente' && (
             <li>
               <Link href="/crear" className="active:text-white">Crear</Link>
@@ -57,11 +56,18 @@ export const Nav = () => {
             <Link href="/verincidencias" className="active:text-white">Ver Incidencias</Link>
           </li>
 
-       
           {user?.tipoUsuario === 'administrador' && (
-            <li>
-              <Link href="/terminado" className="active:text-white">Terminado</Link>
-            </li>
+            <>
+              <li>
+                <Link href="/terminado" className="active:text-white">Terminado</Link>
+              </li>
+              <li>
+                <Link href="/registrousuario" className="active:text-white">Registro Usuario</Link>
+              </li>
+              <li>
+                <Link href="/listausuarios" className="active:text-white">Lista Usuarios</Link> {/* Enlace para ListaUsuarios */}
+              </li>
+            </>
           )}
 
           <li>
@@ -74,12 +80,13 @@ export const Nav = () => {
           </li>
         </ul>
       </nav>
-      
-     
+
       <Route path="/home"><Home /></Route>
       {user?.tipoUsuario === 'residente' && <Route path="/crear"><Crear /></Route>}
       <Route path="/verincidencias"><VerIncidencias /></Route>
       {user?.tipoUsuario === 'administrador' && <Route path="/terminado"><Terminado /></Route>}
+      {user?.tipoUsuario === 'administrador' && <Route path="/registrousuario"><RegistroUsuario /></Route>}
+      {user?.tipoUsuario === 'administrador' && <Route path="/listausuarios"><ListaUsuarios /></Route>} {/* Ruta para ListaUsuarios */}
     </div>
   );
 };

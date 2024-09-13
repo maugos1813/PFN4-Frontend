@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react';
-import { ListaIncidenciasContext } from '../contexts/IncidenciasContext';
-import { useLogin } from '../contexts/LoginContext';
-import gray from '/gray.jpeg';
-import Modal from './Modal';
-import { eliminarIncidencia } from '../services/incidenciasServices.jsx';
-
+import React, { useContext, useState } from "react";
+import { ListaIncidenciasContext } from "../contexts/IncidenciasContext";
+import { useLogin } from "../contexts/LoginContext";
+import gray from "/gray.jpeg";
+import Modal from "./Modal";
+import { eliminarIncidencia } from "../services/incidenciasServices.jsx";
 
 const truncateText = (text, maxLength) => {
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
@@ -18,17 +17,14 @@ const Terminado = () => {
   const [selectedIncidencia, setSelectedIncidencia] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
- 
-  const filteredIncidencias = data
-    .filter(
-      (m) =>
-        m.estado.toLowerCase() === 'resuelta' &&
-        (m.asunto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         m.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         m.tipo_incidencia.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+  const filteredIncidencias = data.filter(
+    (m) =>
+      m.estado.toLowerCase() === "resuelta" &&
+      (m.asunto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.tipo_incidencia.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
- 
   const handleCheckboxChange = (id) => {
     setSelectedIncidencias((prevSelected) =>
       prevSelected.includes(id)
@@ -37,30 +33,29 @@ const Terminado = () => {
     );
   };
 
-
   const handleEliminarClick = async () => {
     try {
       for (const id of selectedIncidencias) {
         await eliminarIncidencia(id);
       }
-      refetch(); 
-      setSelectedIncidencias([]); 
+      refetch();
+      setSelectedIncidencias([]);
     } catch (error) {
       console.error("Error al eliminar incidencias", error);
     }
   };
 
-  
   const handleIncidenciaClick = (incidencia) => {
     setSelectedIncidencia(incidencia);
     setIsModalOpen(true);
   };
 
-  
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedIncidencia(null);
   };
+
+  const isButtonDisabled = selectedIncidencias.length === 0;
 
   return (
     <div
@@ -78,10 +73,15 @@ const Terminado = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="p-2 mb-4 rounded-md w-[30vw] mr-4"
         />
-        {user?.tipoUsuario === 'administrador' && (
+        {user?.tipoUsuario === "administrador" && (
           <button
             onClick={handleEliminarClick}
-            className="bg-red-600 text-white p-2 mr-3 rounded-md h-[5vh]"
+            className={`p-2 mr-3 rounded-md h-[5vh] ${
+              isButtonDisabled
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-red-600 text-white hover:bg-red-500"
+            }`}
+            disabled={isButtonDisabled}
           >
             Eliminar Seleccionados
           </button>
@@ -95,7 +95,7 @@ const Terminado = () => {
             className="h-[10vh] w-[98vw] shadow-2xl2xl flex items-center rounded-3xl px-4 bg-white hover:bg-gray-300 gap-2 overflow-hidden cursor-pointer"
           >
             <div className="flex flex-wrap items-center w-full">
-              {user?.tipoUsuario === 'administrador' && (
+              {user?.tipoUsuario === "administrador" && (
                 <input
                   type="checkbox"
                   checked={selectedIncidencias.includes(m.idIncidencia)}
@@ -122,14 +122,18 @@ const Terminado = () => {
               <h1 className="uppercase font-semibold text-green-600 w-[100%]">
                 Fecha de creación:
               </h1>
-              <p className="px-1 truncate">{truncateText(m.fecha_reporte, 20)}</p>
+              <p className="px-1 truncate">
+                {truncateText(m.fecha_reporte, 20)}
+              </p>
             </div>
 
             <div className="flex flex-col items-start w-full">
               <h1 className="uppercase font-semibold text-green-600 w-[80%]">
                 Tipo de Incidencia:
               </h1>
-              <p className="px-1 truncate">{truncateText(m.tipo_incidencia, 20)}</p>
+              <p className="px-1 truncate">
+                {truncateText(m.tipo_incidencia, 20)}
+              </p>
             </div>
 
             <div className="flex flex-col items-start w-full">
@@ -139,7 +143,6 @@ const Terminado = () => {
               <p className="px-1 truncate">{truncateText(m.estado, 20)}</p>
             </div>
 
-           
             <button
               onClick={() => handleIncidenciaClick(m)}
               className="bg-green-600 text-white p-2 rounded-md ml-4 hover:bg-green-500"
