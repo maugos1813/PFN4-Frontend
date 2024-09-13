@@ -17,7 +17,6 @@ export const VerIncidencias = () => {
   const [selectedIncidencia, setSelectedIncidencia] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Filtra las incidencias por estado
   const filteredIncidencias = data
     .filter(
       (m) =>
@@ -31,7 +30,6 @@ export const VerIncidencias = () => {
         m.tipo_incidencia.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-  // Filtra las incidencias según el tipo de usuario
   const incidenciasToShow = user?.tipoUsuario === "administrador"
     ? filteredIncidencias
     : filteredIncidencias.filter((m) => m.usuario_creador === user?.id);

@@ -8,7 +8,7 @@ import { Crear } from "./Crear";
 import { VerIncidencias } from "./VerIncidencias";
 import Terminado from "./Terminado";
 import RegistroUsuario from './RegistroUsuario';
-import ListaUsuarios from './ListaUsuarios'; // Importa el componente ListaUsuarios
+import ListaUsuarios from './ListaUsuarios'; 
 
 export const Nav = () => {
   const { user, logout: logoutFunction } = useLogin();
@@ -65,7 +65,7 @@ export const Nav = () => {
                 <Link href="/registrousuario" className="active:text-white">Registro Usuario</Link>
               </li>
               <li>
-                <Link href="/listausuarios" className="active:text-white">Lista Usuarios</Link> {/* Enlace para ListaUsuarios */}
+                <Link href="/listausuarios" className="active:text-white">Lista Usuarios</Link>
               </li>
             </>
           )}
@@ -86,7 +86,7 @@ export const Nav = () => {
       <Route path="/verincidencias"><VerIncidencias /></Route>
       {user?.tipoUsuario === 'administrador' && <Route path="/terminado"><Terminado /></Route>}
       {user?.tipoUsuario === 'administrador' && <Route path="/registrousuario"><RegistroUsuario /></Route>}
-      {user?.tipoUsuario === 'administrador' && <Route path="/listausuarios"><ListaUsuarios /></Route>} {/* Ruta para ListaUsuarios */}
+      {user?.tipoUsuario === 'administrador' && <Route path="/listausuarios"><ListaUsuarios /></Route>} 
     </div>
   );
 };
